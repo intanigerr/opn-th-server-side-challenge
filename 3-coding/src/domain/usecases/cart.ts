@@ -2,8 +2,9 @@ import Entities from "../entities";
 import { IDiscountRepository } from "../repositories/discount";
 import { IProductRepository } from "../repositories/product";
 import {
+  CartAddDiscountToEmptyCartException,
   CartDiscountNotFoundException,
-  CartInvalidDiscountPercentage,
+  CartInvalidDiscountPercentageException,
   CartProductNotFoundException,
 } from "./exception";
 import { ICart } from "./interface";
@@ -62,12 +63,13 @@ export class Cart implements ICart {
   }
 
   applyDiscount(discountName: Entities.ID): Cart {
+    if (this.isEmpty) throw new CartAddDiscountToEmptyCartException();
     const discount = this.discountRepository.getByNameOrThrow(discountName);
     if (
       discount.type === "percentage" &&
       (discount.percentage <= 0 || discount.percentage >= 100)
     )
-      throw new CartInvalidDiscountPercentage(
+      throw new CartInvalidDiscountPercentageException(
         discountName,
         discount.percentage
       );

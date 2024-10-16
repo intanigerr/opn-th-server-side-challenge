@@ -1,5 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { Cart } from "../../../domain/usecases/cart";
+import {
+  CartAddDiscountToEmptyCartException,
+  CartInvalidDiscountPercentageException,
+} from "../../../domain/usecases/exception";
 import mockDiscountRepository from "../utils/mockDiscountRepository";
 import mockProductRepository from "../utils/mockProductRepository";
 
@@ -66,6 +70,24 @@ describe("Cart::applyDiscount", () => {
 
     cart.addProduct("MOCK_PRODUCT_100");
 
-    expect(() => cart.applyDiscount("MOCK_INVALID_DISCOUNT")).toThrow();
+    expect(() =>
+      cart.applyDiscount("MOCK_INVALID_DISCOUNT_PERCENTAGE")
+    ).toThrow(CartInvalidDiscountPercentageException);
+  });
+
+  it("When apply non-exist discount, it should throw an error", () => {
+    const cart = new Cart(mockProductRepository, mockDiscountRepository);
+
+    cart.addProduct("MOCK_PRODUCT_100");
+
+    expect(() => cart.applyDiscount("MOCK_DISCOUNT_NON_EXIST")).toThrow();
+  });
+
+  it("When apply a discount to an empty cart, it should throw an error", () => {
+    const cart = new Cart(mockProductRepository, mockDiscountRepository);
+
+    expect(() => cart.applyDiscount("MOCK_DISCOUNT_10_PERCENT")).toThrow(
+      CartAddDiscountToEmptyCartException
+    );
   });
 });

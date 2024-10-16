@@ -34,8 +34,8 @@ const mockDiscounts: { [k: string]: Entities.Discount } = {
     type: "fixed",
     discount: 100,
   },
-  MOCK_INVALID_DISCOUNT: {
-    name: "MOCK_INVALID_DISCOUNT",
+  MOCK_INVALID_DISCOUNT_PERCENTAGE: {
+    name: "MOCK_INVALID_DISCOUNT_PERCENTAGE",
     type: "percentage",
     percentage: 100,
     maximumDiscountAmount: 50,

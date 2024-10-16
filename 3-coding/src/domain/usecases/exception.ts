@@ -10,11 +10,17 @@ export class CartDiscountNotFoundException extends Error {
   }
 }
 
-export class CartInvalidDiscountPercentage extends Error {
+export class CartInvalidDiscountPercentageException extends Error {
   constructor(
     public readonly discountName: string,
     public readonly percentage: number
   ) {
     super(`Invalid discount name ${discountName} percentage: ${percentage}`);
+  }
+}
+
+export class CartAddDiscountToEmptyCartException extends Error {
+  constructor() {
+    super(`Cannot apply discount to an empty cart`);
   }
 }
