@@ -1,2 +1,3 @@
-type T = { username: string; password: string };
-export const store = new Map<string, T>();
+import { User } from "./entity/user";
+
+export const store = new Map<string, User>();

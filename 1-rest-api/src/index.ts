@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import express from "express";
+import { UserHandlerImpl } from "./handler/impl";
 import { store } from "./store";
 
 const app = express();
@@ -14,10 +15,12 @@ router.use((req, res, next) => {
   if (!accessToken || !store.has(accessToken)) {
     res.status(401).end();
   } else {
-    res.locals = accessToken as any;
+    res.locals = { accessToken, user: store.get(accessToken) };
     next();
   }
 });
+
+const userHandler = new UserHandlerImpl(store);
 
 app.post("/users", (req, res) => {
   const sessionId = randomUUID();
@@ -25,35 +28,19 @@ app.post("/users", (req, res) => {
   res.status(200).json({ accessToken: sessionId }).end();
 });
 
-router.get("/users/current", (req, res) => {
-  const user = store.get(res.locals as any);
-  res.status(200).json(user).end();
-});
+router.get("/users/current", userHandler.getCurrentUserInfo.bind(userHandler));
 
-router.patch("/users/current", (req, res) => {
-  const user = store.get(res.locals as any);
-  const { password, ...rest } = req.body;
-  const updatedUser = { ...user, ...rest };
-  store.set(res.locals as any, updatedUser);
-  res.status(200).end();
-});
+router.patch(
+  "/users/current",
+  userHandler.updateCurrentUserInfo.bind(userHandler)
+);
 
-router.patch("/users/current/password", (req, res) => {
-  const user = store.get(res.locals as any);
-  const { password, newPassword } = req.body;
-  if (password !== user?.password) {
-    res.status(400).end();
-  } else {
-    const updatedUser = { ...user, password: newPassword };
-    store.set(res.locals as any, updatedUser as any);
-    res.status(200).end();
-  }
-});
+router.patch(
+  "/users/current/password",
+  userHandler.updatePassword.bind(userHandler)
+);
 
-router.delete("/users/current", (req, res) => {
-  store.delete(res.locals as any);
-  res.status(200).end();
-});
+router.delete("/users/current", userHandler.deleteUser.bind(userHandler));
 
 app.use(router);
 
