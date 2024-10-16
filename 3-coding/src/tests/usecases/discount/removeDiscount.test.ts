@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { Cart } from "../../../domain/usecases/cart";
 import { CartDiscountNotFoundException } from "../../../domain/usecases/exception";
-import mockDiscountRepository from "../utils/mockDiscountRepository";
-import mockProductRepository from "../utils/mockProductRepository";
+import mockDiscountRepository from "../mock/mockDiscountRepository";
+import mockProductRepository from "../mock/mockProductRepository";
 
 describe("Cart::removeDiscount", () => {
   it("When `removeDiscount`, it should restore totalAmount correctly", () => {

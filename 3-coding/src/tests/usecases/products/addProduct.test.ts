@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 import { IDiscountRepository } from "../../../domain/repositories/discount";
 import { Cart } from "../../../domain/usecases/cart";
-import mockProductRepository from "../utils/mockProductRepository";
+import mockProductRepository from "../mock/mockProductRepository";
 
 const mockDiscountRepository = {
   getByNameOrThrow: vi.fn(),

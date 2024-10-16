@@ -4,8 +4,8 @@ import {
   CartAddDiscountToEmptyCartException,
   CartInvalidDiscountPercentageException,
 } from "../../../domain/usecases/exception";
-import mockDiscountRepository from "../utils/mockDiscountRepository";
-import mockProductRepository from "../utils/mockProductRepository";
+import mockDiscountRepository from "../mock/mockDiscountRepository";
+import mockProductRepository from "../mock/mockProductRepository";
 
 describe("Cart::applyDiscount", () => {
   it("When `applyDiscount`, it should deduct a grandTotal", () => {
