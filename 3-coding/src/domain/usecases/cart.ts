@@ -60,15 +60,15 @@ export class Cart implements ICart {
     return this._products.has(productId);
   }
 
-  applyDiscount(discountId: Entities.ID): Cart {
-    this.discountRepository.getByNameOrThrow(discountId);
-    this._discounts.add(discountId);
+  applyDiscount(discountName: Entities.ID): Cart {
+    this.discountRepository.getByNameOrThrow(discountName);
+    this._discounts.add(discountName);
     return this;
   }
 
-  removeDiscount(discountId: Entities.ID): ICart {
-    if (!this._discounts.delete(discountId))
-      throw new CartDiscountNotFoundException(discountId);
+  removeDiscount(discountName: Entities.ID): ICart {
+    if (!this._discounts.delete(discountName))
+      throw new CartDiscountNotFoundException(discountName);
     return this;
   }
 
@@ -80,7 +80,10 @@ export class Cart implements ICart {
   }
 
   public get grandTotal(): number {
-    return 0;
+    return this.products.reduce((acc, { productId, quantity }) => {
+      const product = this.productRepository.getByIdOrThrow(productId);
+      return acc + product.price * quantity;
+    }, 0);
   }
 
   public get isEmpty(): boolean {
