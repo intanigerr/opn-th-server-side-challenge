@@ -38,4 +38,23 @@ describe("Cart::updateProduct", () => {
     expect(cart.products[0].quantity).toEqual(1);
     expect(cart.grandTotal).toBe(100);
   });
+
+  it("When `updateProduct` with 0 quantity, it should delete the product", () => {
+    const cart = new Cart(mockProductRepository, mockDiscountRepository);
+
+    cart.addProduct("MOCK_PRODUCT_100");
+    expect(() => cart.updateProduct("MOCK_PRODUCT_100", 0)).not.toThrow();
+    expect(cart.products).toHaveLength(0);
+    expect(cart.grandTotal).toBe(0);
+  });
+
+  it("When `updateProduct` with negative quantity, it should throw an error", () => {
+    const cart = new Cart(mockProductRepository, mockDiscountRepository);
+
+    cart.addProduct("MOCK_PRODUCT_100");
+    expect(() => cart.updateProduct("MOCK_PRODUCT_100", -1)).toThrow();
+    expect(cart.products).toHaveLength(1);
+    expect(cart.products[0].quantity).toEqual(1);
+    expect(cart.grandTotal).toBe(100);
+  });
 });

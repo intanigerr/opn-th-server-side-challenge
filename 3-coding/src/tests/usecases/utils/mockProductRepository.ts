@@ -22,6 +22,11 @@ const mockProducts: { [k: Entities.ID]: Entities.Product } = {
     price: 300,
     freebies: null,
   },
+  MOCK_PRODUCT_WITH_FREEBIES: {
+    id: "MOCK_PRODUCT_WITH_FREEBIE",
+    price: 350,
+    freebies: "MOCK_PRODUCT_300",
+  },
 };
 
 mockProductRepository.getByIdOrThrow.mockImplementation((id) => {

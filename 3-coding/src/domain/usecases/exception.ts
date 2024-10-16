@@ -24,3 +24,9 @@ export class CartAddDiscountToEmptyCartException extends Error {
     super(`Cannot apply discount to an empty cart`);
   }
 }
+
+export class CartInvalidQuantityException extends Error {
+  constructor(public readonly quantity: number) {
+    super(`Invalid quantity ${quantity}`);
+  }
+}

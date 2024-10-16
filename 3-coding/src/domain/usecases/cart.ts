@@ -5,9 +5,10 @@ import {
   CartAddDiscountToEmptyCartException,
   CartDiscountNotFoundException,
   CartInvalidDiscountPercentageException,
+  CartInvalidQuantityException,
   CartProductNotFoundException,
 } from "./exception";
-import { ICart } from "./interface";
+import { ICart, ProductIdWithQuantity } from "./interface";
 
 export class Cart implements ICart {
   private _products: Map<Entities.ID, number> = new Map();
@@ -47,7 +48,11 @@ export class Cart implements ICart {
     if (!this._products.has(productId))
       throw new CartProductNotFoundException(productId);
 
-    this._products.set(productId, quantity);
+    if (quantity < 0) throw new CartInvalidQuantityException(quantity);
+
+    if (quantity === 0) this.deleteProduct(productId);
+    else this._products.set(productId, quantity);
+
     return this;
   }
 
@@ -84,17 +89,33 @@ export class Cart implements ICart {
   }
 
   public get products(): ICart["products"] {
-    return Array.from(this._products.entries(), ([productId, quantity]) => ({
-      productId,
-      quantity,
-    }));
+    const normalProducts = Array.from(
+      this._products.entries(),
+      ([productId, quantity]) => ({
+        productId,
+        quantity,
+        free: false,
+      })
+    );
+
+    const freebies = normalProducts
+      .map<ProductIdWithQuantity | null>(({ productId, quantity }) => {
+        const product = this.productRepository.getByIdOrThrow(productId);
+        if (!product.freebies) return null;
+        return { productId: product.freebies, quantity, free: true };
+      })
+      .filter((p): p is ProductIdWithQuantity => p !== null);
+
+    return normalProducts.concat(freebies);
   }
 
   public get grandTotal(): number {
-    const subtotal = this.products.reduce((acc, { productId, quantity }) => {
-      const product = this.productRepository.getByIdOrThrow(productId);
-      return acc + product.price * quantity;
-    }, 0);
+    const subtotal = this.products
+      .filter(({ free }) => !free)
+      .reduce((acc, { productId, quantity }) => {
+        const product = this.productRepository.getByIdOrThrow(productId);
+        return acc + product.price * quantity;
+      }, 0);
 
     const discount = Array.from(this._discounts).reduce((acc, discountName) => {
       const discount = this.discountRepository.getByNameOrThrow(discountName);

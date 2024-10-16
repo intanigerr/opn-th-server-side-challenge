@@ -1,6 +1,10 @@
 import Entities from "../entities";
 
-type ProductIdWithQuantity = { productId: Entities.ID; quantity: number };
+export type ProductIdWithQuantity = {
+  productId: Entities.ID;
+  quantity: number;
+  free: boolean;
+};
 
 export interface ICart {
   readonly products: ProductIdWithQuantity[];
