@@ -9,7 +9,7 @@ Welcome to the Opn.Pro (Commerce) Engineering candidate testing area.
 
 ## 1. RESTful API
 
-> Solution: [1-rest-api directory](./1-rest-api/src/)
+> Solution: [1-rest-api directory](./1-rest-api/)
 
 Our commerce services need an interface where it bridges between frontend and data source, so we decided to have a RESTful API where it supports following pages.
 
@@ -55,7 +55,7 @@ Design a database contains tables that support bellowing requirements.
 
 ## 3. Coding
 
-> Solution: [3-coding directory](./3-coding/src/)
+> Solution: [3-coding directory](./3-coding/)
 
 Write a service called `Cart` which serve usage listed below.
 
