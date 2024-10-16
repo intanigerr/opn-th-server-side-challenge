@@ -64,7 +64,18 @@ export class Cart implements ICart {
   }
 
   isProductExist(productId: Entities.ID): boolean {
-    return this._products.has(productId);
+    return (
+      this._products.has(productId) ||
+      this.products.some((p) => p.productId === productId)
+    );
+  }
+
+  public get uniqueProducts(): number {
+    return new Set(this.products.map((p) => p.productId)).size;
+  }
+
+  public get totalItemsAmount(): number {
+    return this.products.reduce((acc, { quantity }) => acc + quantity, 0);
   }
 
   applyDiscount(discountName: Entities.ID): Cart {

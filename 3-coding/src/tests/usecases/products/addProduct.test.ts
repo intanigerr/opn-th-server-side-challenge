@@ -14,6 +14,7 @@ describe("Cart::addProduct", () => {
     expect(() => cart.addProduct("MOCK_PRODUCT_100")).not.toThrow();
     expect(cart.products).toHaveLength(1);
     expect(cart.products[0].quantity).toEqual(1);
+    expect(cart.totalItemsAmount).toBe(1);
     expect(cart.grandTotal).toBe(100);
   });
 
@@ -23,6 +24,8 @@ describe("Cart::addProduct", () => {
     expect(() => cart.addProduct("INVALID_PRODUCT")).toThrow();
     expect(cart.products).toHaveLength(0);
     expect(cart.grandTotal).toBe(0);
+    expect(cart.uniqueProducts).toBe(0);
+    expect(cart.totalItemsAmount).toBe(0);
   });
 
   it("When `addProduct` with existing product, it should increment the quantity", () => {
@@ -32,6 +35,8 @@ describe("Cart::addProduct", () => {
 
     expect(cart.products).toHaveLength(1);
     expect(cart.products[0].quantity).toEqual(2);
+    expect(cart.totalItemsAmount).toBe(2);
+    expect(cart.uniqueProducts).toBe(1);
     expect(cart.grandTotal).toBe(200);
   });
 
@@ -43,6 +48,8 @@ describe("Cart::addProduct", () => {
     expect(cart.products).toHaveLength(2);
     expect(cart.products[0].quantity).toEqual(1);
     expect(cart.products[1].quantity).toEqual(1);
+    expect(cart.totalItemsAmount).toBe(2);
+    expect(cart.uniqueProducts).toBe(2);
     expect(cart.grandTotal).toBe(300);
   });
 });

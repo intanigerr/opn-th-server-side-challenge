@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { Cart } from "../../../domain/usecases/cart";
-import mockDiscountRepository from "../utils/mockDiscountRepository";
-import mockProductRepository from "../utils/mockProductRepository";
+import mockDiscountRepository from "../mock/mockDiscountRepository";
+import mockProductRepository from "../mock/mockProductRepository";
 
 describe("Cart - Freebie", () => {
   it("When `addProduct` with freebie, it should add freebie to cart", () => {
@@ -32,6 +32,8 @@ describe("Cart - Freebie", () => {
       quantity: 3,
       free: true,
     });
+    expect(cart.uniqueProducts).toBe(2);
+    expect(cart.totalItemsAmount).toBe(6);
   });
 
   it("When `addProduct` with freebie and then add a same product as freebie later, it should discriminate freebie and paid product", () => {
@@ -54,6 +56,8 @@ describe("Cart - Freebie", () => {
       quantity: 1,
       free: false,
     });
+    expect(cart.uniqueProducts).toBe(2);
+    expect(cart.totalItemsAmount).toBe(5);
 
     // Reverse order
     cart
@@ -74,6 +78,8 @@ describe("Cart - Freebie", () => {
       quantity: 1,
       free: false,
     });
+    expect(cart.uniqueProducts).toBe(2);
+    expect(cart.totalItemsAmount).toBe(5);
   });
 
   it("When `updateProduct` with freebie, it should update freebie quantity", () => {
@@ -90,6 +96,8 @@ describe("Cart - Freebie", () => {
       quantity: 3,
       free: true,
     });
+    expect(cart.uniqueProducts).toBe(2);
+    expect(cart.totalItemsAmount).toBe(6);
 
     cart.updateProduct("MOCK_PRODUCT_WITH_FREEBIES", 2);
 
@@ -100,5 +108,7 @@ describe("Cart - Freebie", () => {
       quantity: 2,
       free: true,
     });
+    expect(cart.uniqueProducts).toBe(2);
+    expect(cart.totalItemsAmount).toBe(4);
   });
 });
