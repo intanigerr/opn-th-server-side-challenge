@@ -3,7 +3,7 @@ import { Id } from "./id";
 type PercentageDiscount = {
   type: "percentage";
   /**
-   * The percentage value must be a double between 0 and 100å.
+   * The percentage value must be a number between 0 and 100.
    */
   percentage: number;
   maximumDiscountAmount: number;
