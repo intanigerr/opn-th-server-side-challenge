@@ -8,6 +8,9 @@ Welcome to the Opn.Pro (Commerce) Engineering candidate testing area.
 - Please be prepared to present your code and code review with the interviewer.
 
 ## 1. RESTful API
+
+> Solution: [1-rest-api directory](./1-rest-api/src/)
+
 Our commerce services need an interface where it bridges between frontend and data source, so we decided to have a RESTful API where it supports following pages.
 
 #### Pages
@@ -33,6 +36,9 @@ Our commerce services need an interface where it bridges between frontend and da
 - Any idea that makes your application better are acceptable.
 
 ## 2. Database
+
+> Solution: ![Database Schema Design](image-1.png)
+
 Design a database contains tables that support bellowing requirements.
 
 #### Requirements
@@ -48,6 +54,9 @@ Design a database contains tables that support bellowing requirements.
 - Any format of the design are acceptable, example: TXT, MD, SQL, JSON or any visual diagram as long as you can explain.
 
 ## 3. Coding
+
+> Solution: [3-coding directory](./3-coding/src/)
+
 Write a service called `Cart` which serve usage listed below.
 
 **Basic** - Cart service that can manage items.
