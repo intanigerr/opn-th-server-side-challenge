@@ -3,6 +3,7 @@ import { IDiscountRepository } from "../repositories/discount";
 import { IProductRepository } from "../repositories/product";
 import {
   CartDiscountNotFoundException,
+  CartInvalidDiscountPercentage,
   CartProductNotFoundException,
 } from "./exception";
 import { ICart } from "./interface";
@@ -61,7 +62,15 @@ export class Cart implements ICart {
   }
 
   applyDiscount(discountName: Entities.ID): Cart {
-    this.discountRepository.getByNameOrThrow(discountName);
+    const discount = this.discountRepository.getByNameOrThrow(discountName);
+    if (
+      discount.type === "percentage" &&
+      (discount.percentage <= 0 || discount.percentage >= 100)
+    )
+      throw new CartInvalidDiscountPercentage(
+        discountName,
+        discount.percentage
+      );
     this._discounts.add(discountName);
     return this;
   }
@@ -80,10 +89,25 @@ export class Cart implements ICart {
   }
 
   public get grandTotal(): number {
-    return this.products.reduce((acc, { productId, quantity }) => {
+    const subtotal = this.products.reduce((acc, { productId, quantity }) => {
       const product = this.productRepository.getByIdOrThrow(productId);
       return acc + product.price * quantity;
     }, 0);
+
+    const discount = Array.from(this._discounts).reduce((acc, discountName) => {
+      const discount = this.discountRepository.getByNameOrThrow(discountName);
+      if (discount.type === "fixed") return acc + discount.discount;
+
+      return (
+        acc +
+        Math.min(
+          (discount.percentage / 100) * subtotal,
+          discount.maximumDiscountAmount
+        )
+      );
+    }, 0);
+
+    return Math.max(subtotal - discount, 0);
   }
 
   public get isEmpty(): boolean {

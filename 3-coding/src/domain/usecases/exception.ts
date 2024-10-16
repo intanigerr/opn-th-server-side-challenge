@@ -5,7 +5,16 @@ export class CartProductNotFoundException extends Error {
 }
 
 export class CartDiscountNotFoundException extends Error {
-  constructor(public readonly discountId: string) {
-    super(`Discount with ID ${discountId} not found`);
+  constructor(public readonly discountName: string) {
+    super(`Discount name: ${discountName} not found`);
+  }
+}
+
+export class CartInvalidDiscountPercentage extends Error {
+  constructor(
+    public readonly discountName: string,
+    public readonly percentage: number
+  ) {
+    super(`Invalid discount name ${discountName} percentage: ${percentage}`);
   }
 }
